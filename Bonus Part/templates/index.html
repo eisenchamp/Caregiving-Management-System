@@ -1,0 +1,616 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+            <div class="jumbotron p-3">
+                <h2>Manage <b>Members   </b></h2>
+                    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#mymodal">Add New Members</button>
+
+                    {% with messages = get_flashed_messages() %}
+
+                    {%if messages %}
+
+                    {% for message in messages %}
+
+                    <div class="alert alert-success alert-dismissable" role="alert">
+
+                        <button type="button" class="'close" data-dismiss="'alert" aria-label="close">
+
+                            <span aria-hidden="true">x</span>
+
+                        </button>
+
+                        {{message}}
+
+                    </div>
+
+                    {% endfor %}
+
+                    {% endif %}
+
+                    {% endwith %}
+                    <table class="table table-hover table-dark">
+                        <tr>
+                            <th>Member ID</th>
+                            <th>Email</th>
+                            <th>Given Name</th>
+                            <th>Surname</th>
+                            <th>City</th>
+                            <th>Phone</th>
+                            <th>Profile</th>
+                            <th>Password</th>
+                            <th>Rules</th>
+                            <th>Action</th>
+                        </tr>
+
+                        {% for row in members %}
+
+                        <tr>
+                            <td>{{row.user_id}}</td>
+                            <td>{{row.email}}</td>
+                            <td>{{row.given_name}}</td>
+                            <td>{{row.surname}}</td>
+                            <td>{{row.city}}</td>
+                            <td>{{row.phone_number}}</td>
+                            <td>{{row.profile_description}}</td>
+                            <td>{{row.password}}</td>
+                            <td>{{row.house_rules}}</td>
+                            <td>
+                                <a href="/update/{{row.user_id}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.user_id}}">Edit</a>
+                                <a href="/delete/{{row.user_id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure?')">Delete</a>
+                            </td>
+                        </tr>
+
+                        <div id="modaledit{{row.user_id}}" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Update Information</h4>
+                                    </div>
+    
+                                    <div class="modal-body">
+                                        <form action="{{url_for('update_member')}}" method="POST">
+
+                                            <div class="form-group">
+                                                <label>Email:</label>
+                                                <input type="text" class="form-control" name="email" value="{{row.email}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Given Name:</label>
+                                                <input type="hidden" name="user_id" value="{{row.user_id}}">
+                                                <input type="text" class="form-control" name="given_name" value="{{row.given_name}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Surname:</label>
+                                                <input type="text" class="form-control" name="surname" value="{{row.surname}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>City:</label>
+                                                <input type="text" class="form-control" name="city" value="{{row.city}}">
+                                            </div>
+    
+                                            <div class="form-group">
+                                                <label>Phone:</label>
+                                                <input type="text" class="form-control" name="phone_number" value="{{row.phone_number}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Profile:</label>
+                                                <input type="text" class="form-control" name="profile_description" value="{{row.profile_description}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Password:</label>
+                                                <input type="text" class="form-control" name="password" value="{{row.password}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Rules:</label>
+                                                <input type="text" class="form-control" name="house_rules" value="{{row.house_rules}}">
+                                            </div>
+    
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+    
+                                    <div class="modal-footer">
+    
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+    
+                                </div>
+                            </div>    
+                        </div>
+                        {% endfor %}
+                    </table>
+            </div>
+            <div id="mymodal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h4 class="modal-title">Add Member</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('insert_member')}}" method="POST">
+
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <input type="text" class="form-control" name="email" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Given Name:</label>
+                                    <input type="text" class="form-control" name="given_name" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Surname:</label>
+                                    <input type="text" class="form-control" name="surname" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>City:</label>
+                                    <input type="text" class="form-control" name="city" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Phone:</label>
+                                    <input type="text" class="form-control" name="phone_number" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Profile:</label>
+                                    <input type="text" class="form-control" name="profile_description" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Password:</label>
+                                    <input type="text" class="form-control" name="password" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Rules:</label>
+                                    <input type="text" class="form-control" name="house_rules" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Add Member</button>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+            <div class="jumbotron p-3">
+                <h2>Manage <b>Caregivers   </b></h2>
+                    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#care_modal">Add New Caregiver</button>
+
+                    {% with messages = get_flashed_messages() %}
+
+                    {%if messages %}
+
+                    {% for message in messages %}
+
+                    <div class="alert alert-success alert-dismissable" role="alert">
+
+                        <button type="button" class="'close" data-dismiss="'alert" aria-label="close">
+
+                            <span aria-hidden="true">x</span>
+
+                        </button>
+
+                        {{message}}
+
+                    </div>
+
+                    {% endfor %}
+
+                    {% endif %}
+
+                    {% endwith %}
+                    <table class="table table-hover table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Given Name</th>
+                            <th>Surname</th>
+                            <th>Photo</th>
+                            <th>Gender</th>
+                            <th>Type</th>
+                            <th>Rate</th>
+                            <th>City</th>
+                            <th>Phone</th>
+                            <th>Profile</th>
+                            <th>Password</th>
+                            <th>Action</th>
+                        </tr>
+
+                        {% for row in caregivers %}
+
+                        <tr>
+                            <td>{{row.user_id}}</td>
+                            <td>{{row.email}}</td>
+                            <td>{{row.given_name}}</td>
+                            <td>{{row.surname}}</td>
+                            <td>{{row.photo}}</td>
+                            <td>{{row.gender}}</td>
+                            <td>{{row.caregiving_type}}</td>
+                            <td>{{row.hourly_rate}}</td>
+                            <td>{{row.city}}</td>
+                            <td>{{row.phone_number}}</td>
+                            <td>{{row.profile_description}}</td>
+                            <td>{{row.password}}</td>
+                            <td>
+                                <a href="/update/{{row.user_id}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#care_modaledit{{row.user_id}}">Edit</a>
+                                <a href="/delete/{{row.user_id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure?')">Delete</a>
+                            </td>
+                        </tr>
+
+                        <div id="care_modaledit{{row.user_id}}" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Update Information</h4>
+                                    </div>
+    
+                                    <div class="modal-body">
+                                        <form action="{{url_for('update_caregiver')}}" method="POST">
+
+                                            <div class="form-group">
+                                                <label>Email:</label>
+                                                <input type="text" class="form-control" name="email" value="{{row.email}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Given Name:</label>
+                                                <input type="hidden" name="user_id" value="{{row.user_id}}">
+                                                <input type="text" class="form-control" name="given_name" value="{{row.given_name}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Surname:</label>
+                                                <input type="text" class="form-control" name="surname" value="{{row.surname}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Photo:</label>
+                                                <input type="text" class="form-control" name="photo" value="{{row.photo}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Gender:</label>
+                                                <input type="text" class="form-control" name="gender" value="{{row.gender}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Type:</label>
+                                                <input type="text" class="form-control" name="caregiving_type" value="{{row.caregiving_type}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Rate:</label>
+                                                <input type="text" class="form-control" name="hourly_rate" value="{{row.hourly_rate}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>City:</label>
+                                                <input type="text" class="form-control" name="city" value="{{row.city}}">
+                                            </div>
+    
+                                            <div class="form-group">
+                                                <label>Phone:</label>
+                                                <input type="text" class="form-control" name="phone_number" value="{{row.phone_number}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Profile:</label>
+                                                <input type="text" class="form-control" name="profile_description" value="{{row.profile_description}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Password:</label>
+                                                <input type="text" class="form-control" name="password" value="{{row.password}}">
+                                            </div>
+    
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+    
+                                    <div class="modal-footer">
+    
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+    
+                                </div>
+                            </div>    
+                        </div>
+                        {% endfor %}
+                    </table>
+            </div>
+            <div id="care_modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h4 class="modal-title">Add Caregiver</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('insert_caregiver')}}" method="POST">
+
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <input type="text" class="form-control" name="email" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Given Name:</label>
+                                    <input type="text" class="form-control" name="given_name" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Surname:</label>
+                                    <input type="text" class="form-control" name="surname" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Photo:</label>
+                                    <input type="text" class="form-control" name="photo" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Gender:</label>
+                                    <input type="text" class="form-control" name="gender" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Type:</label>
+                                    <input type="text" class="form-control" name="caregiving_type" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Rate:</label>
+                                    <input type="text" class="form-control" name="hourly_rate" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>City:</label>
+                                    <input type="text" class="form-control" name="city" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Phone:</label>
+                                    <input type="text" class="form-control" name="phone_number" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Profile:</label>
+                                    <input type="text" class="form-control" name="profile_description" required="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Password:</label>
+                                    <input type="text" class="form-control" name="password" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Add Caregiver</button>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+            <div class="jumbotron p-3">
+                <h2>Manage <b>Appointments   </b></h2>
+                    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#app_modal">Add Appointment</button>
+
+                    {% with messages = get_flashed_messages() %}
+
+                    {%if messages %}
+
+                    {% for message in messages %}
+
+                    <div class="alert alert-success alert-dismissable" role="alert">
+
+                        <button type="button" class="'close" data-dismiss="'alert" aria-label="close">
+
+                            <span aria-hidden="true">x</span>
+
+                        </button>
+
+                        {{message}}
+
+                    </div>
+
+                    {% endfor %}
+
+                    {% endif %}
+
+                    {% endwith %}
+                    <table class="table table-hover table-dark">
+                        <tr>
+                            <th>Appointment ID</th>
+                            <th>Caregiver ID</th>
+                            <th>Member ID</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Hours</th>
+                            <th>Status</th>
+                        </tr>
+
+                        {% for row in appointments %}
+
+                        <tr>
+                            <td>{{row.appointment_id}}</td>
+                            <td>{{row.caregiver_user_id}}</td>
+                            <td>{{row.member_user_id}}</td>
+                            <td>{{row.appointment_date}}</td>
+                            <td>{{row.appointment_time}}</td>
+                            <td>{{row.work_hours}}</td>
+                            <td>{{row.status}}</td>
+                            <td>
+                                <a href="/update/{{row.appointment_id}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#app_modaledit{{row.user_id}}">Edit</a>
+                                <a href="/delete/{{row.appointment_id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure?')">Delete</a>
+                            </td>
+                        </tr>
+
+                        <div id="app_modaledit{{row.appointment_id}}" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Update Information</h4>
+                                    </div>
+    
+                                    <div class="modal-body">
+                                        <form action="{{url_for('update_appointment')}}" method="POST">
+
+                                            <div class="form-group">
+                                                <label>Caregicer ID:</label>
+                                                <input type="text" class="form-control" name="caregiver_user_id" value="{{row.caregiver_user_id}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Member ID:</label>
+                                                <input type="hidden" name="appointment_id" value="{{row.appointment_id}}">
+                                                <input type="text" class="form-control" name="member_user_id" value="{{row.member_user_id}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Date:</label>
+                                                <input type="text" class="form-control" name="appointment_date" value="{{row.appointment_date}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Time:</label>
+                                                <input type="text" class="form-control" name="appointment_time" value="{{row.appointment_time}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Hours:</label>
+                                                <input type="text" class="form-control" name="work_hours" value="{{row.work_hours}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Status:</label>
+                                                <input type="text" class="form-control" name="status" value="{{row.status}}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+    
+                                    <div class="modal-footer">
+    
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+    
+                                </div>
+                            </div>    
+                        </div>
+                        {% endfor %}
+                    </table>
+            </div>
+            <div id="app_modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h4 class="modal-title">Add Appointment</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('insert_appointment')}}" method="POST">
+
+                                <div class="form-group">
+                                    <label>Caregiver ID:</label>
+                                    <input type="text" class="form-control" name="caregiver_user_id" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Member ID:</label>
+                                    <input type="text" class="form-control" name="member_user_id" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Date:</label>
+                                    <input type="text" class="form-control" name="appointment_date" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Time:</label>
+                                    <input type="text" class="form-control" name="appointment_time" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Hours:</label>
+                                    <input type="text" class="form-control" name="work_hours" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Status:</label>
+                                    <input type="text" class="form-control" name="status" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Add Appointment</button>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
